@@ -1,17 +1,25 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="ko">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GPU Dashboard</title>
+    <!-- 깔끔한 한국어 폰트 적용 (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts 링크 추가 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      /* body에 전체 배경과 기본 폰트 적용 */
+      body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background: #f4f7f9;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
   </head>
   <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
+    <!-- 번들링된 자바스크립트 파일을 불러옵니다. (Vue CLI 등 사용 시 자동 처리) -->
   </body>
 </html>
