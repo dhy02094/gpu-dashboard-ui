@@ -37,7 +37,7 @@ export default {
   width: 180px;
   height: 100vh;
   box-sizing: border-box;
-  border-right: 6px solid #FFF0F5; /* 밝은 파란색 */
+  border-right: 1px solid #C0C0C0; /* 밝은 파란색 */
   background: #ffffff;
 }
 

@@ -15,6 +15,12 @@
       </div>
     </header>
     <section class="dashboard-content">
+      <!-- <v-data-table
+      v-model:sort-by="sortBy"
+      :headers="headers"
+      :items="desserts"
+      hide-default-footer
+      ></v-data-table> -->
       <table>
         <thead>
           <tr>
@@ -32,7 +38,10 @@
             <td>{{ pod.gpuDevices }}</td>
             <td :class="statusClass(pod.status)">{{ pod.status }}</td>
             <td>{{ pod.uptime }}</td>
-            <td>김태형</td>
+            <!-- <td>김태형</td> -->
+            <td>
+              <input v-model="pod.user" @blur="updateUser(pod)" placeholder="현재 사용자" />
+            </td>
             <td class="text-center" style="text-align: center;">
               <button
                 @click="confirmRestart(pod)" 
@@ -68,7 +77,7 @@ export default {
   data() {
     return {
       pods: [],
-      namespaces: ['aidx', 'abclab', 'kube-system'],
+      namespaces: ['aidx', 'abclab',],
       selectedNamespace: localStorage.getItem('selectedNamespace') || 'aidx',
       podToRestart: null,    // 재실행 대상 pod 저장
       showConfirm: false,    // 다이얼로그 표시 여부
@@ -123,6 +132,19 @@ export default {
         console.error(`Dashboard.vue: ${pod.name} pod 재실행 실패:`, error);
       });
     },
+    updateUser(pod) {
+      axios.post('/api/pods/update', {
+        namespace: this.selectedNamespace,
+        podName: pod.name,
+        user: pod.user
+      })
+      .then(response => {
+        console.log(`Dashboard.vue: ${pod.name} pod 사용자 업데이트 성공`, response);
+      })
+      .catch(error => {
+        console.error(`Dashboard.vue: ${pod.name} pod 사용자 업데이트 실패:`, error);
+      });
+    }
   },
   watch: {
     selectedNamespace(newNamespace) {
@@ -137,12 +159,13 @@ export default {
 
 <style scoped>
 .dashboard {
-  background: #FFFAFA;
+  background: #FFFFFF;
   border-radius: 8px;
   padding: 20px;
   margin: 40px auto;
   max-width: 1000px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family:  'Malgun Gothic', sans-serif;
 }
 
 .dashboard-header {
@@ -196,24 +219,28 @@ export default {
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 5px;
+  height: 10px;
+  overflow-y: auto;
 }
 
 th, td {
   padding: 12px 15px;
-  border: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
   text-align: left;
+  font-size: 0.9rem; /* 글씨 크기 줄임 */
 }
 
 th {
   background-color: #f7f7f7;
   font-weight: 700;
   color: #555;
+  font-size: 0.9rem; /* 헤더 글씨 크기도 동일하게 줄임 */
 }
 
-tr:nth-child(even) {
+/* tr:nth-child(even) {
   background-color: #f9f9f9;
-}
+} */
 
 /* 상태별 글자 색상 */
 .status-running {
@@ -255,5 +282,9 @@ tr:nth-child(even) {
 .action-column {
   width: 50px; /* 넓이를 늘림 */
   text-align: center;
+}
+
+tr:last-child td {
+  border-bottom: none;
 }
 </style>
