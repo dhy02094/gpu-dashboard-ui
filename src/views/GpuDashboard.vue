@@ -33,14 +33,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="pod in pods" :key="pod.name">
-            <td>{{ pod.name }}</td>
+          <tr v-for="pod in pods" :key="pod.podname">
+            <td>{{ pod.podname }}</td>
             <td>{{ pod.gpuDevices }}</td>
-            <td :class="statusClass(pod.status)">{{ pod.status }}</td>
-            <td>{{ pod.uptime }}</td>
+            <td :class="statusClass(pod.podstatus)">{{ pod.podstatus }}</td>
+            <td>{{ pod.poduptime }}</td>
             <!-- <td>김태형</td> -->
             <td>
-              <input v-model="pod.user" @blur="updateUser(pod)" placeholder="현재 사용자" />
+              <input v-model="pod.username" @blur="updateUser(pod)" placeholder="현재 사용자" />
             </td>
             <td class="text-center" style="text-align: center;">
               <button
@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     loadPods() {
-      axios.post('/api/pods', { namespace: this.selectedNamespace })
+      axios.post('/api/pods/db', { namespace: this.selectedNamespace })
         .then(response => {
           this.pods = response.data.result;
         })
@@ -103,6 +103,8 @@ export default {
         case 'Terminated':
         case 'Failed':
           return 'status-terminated';
+        case 'Deleted':
+          return 'status-terminated';
         default:
           return '';
       }
@@ -118,31 +120,31 @@ export default {
       }
     },
     restartPod(pod) {
-      console.log(`Dashboard.vue: ${pod.name} pod 재실행 시도`);
+      console.log(`Dashboard.vue: ${pod.podname} pod 재실행 시도`);
       axios.post('/api/pods/delete', { 
         namespace: this.selectedNamespace, 
-        podName: pod.name 
+        podName: pod.podname 
       })
       .then(response => {
-        console.log(`Dashboard.vue: ${pod.name} pod 재실행 성공`, response);
+        console.log(`Dashboard.vue: ${pod.podname} pod 재실행 성공`, response);
         // 재실행 후 pod 목록 갱신 (필요시)
         this.loadPods();
       })
       .catch(error => {
-        console.error(`Dashboard.vue: ${pod.name} pod 재실행 실패:`, error);
+        console.error(`Dashboard.vue: ${pod.podname} pod 재실행 실패:`, error);
       });
     },
     updateUser(pod) {
-      axios.post('/api/pods/update', {
+      axios.post('/api/pods/update/username', {
         namespace: this.selectedNamespace,
-        podName: pod.name,
-        user: pod.user
+        podName: pod.podname,
+        user: pod.username
       })
       .then(response => {
-        console.log(`Dashboard.vue: ${pod.name} pod 사용자 업데이트 성공`, response);
+        console.log(`Dashboard.vue: ${pod.username} pod 사용자 업데이트 성공`, response);
       })
       .catch(error => {
-        console.error(`Dashboard.vue: ${pod.name} pod 사용자 업데이트 실패:`, error);
+        console.error(`Dashboard.vue: ${pod.username} pod 사용자 업데이트 실패:`, error);
       });
     }
   },
