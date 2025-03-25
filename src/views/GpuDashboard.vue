@@ -40,7 +40,11 @@
             <td>{{ pod.poduptime }}</td>
             <!-- <td>김태형</td> -->
             <td>
-              <input v-model="pod.username" @blur="updateUser(pod)" placeholder="현재 사용자" />
+              <input 
+                v-model="pod.username" 
+                @keyup.enter="updateUser(pod)"
+                placeholder="현재 사용자" 
+              />
             </td>
             <td class="text-center" style="text-align: center;">
               <button
@@ -135,10 +139,11 @@ export default {
       });
     },
     updateUser(pod) {
+      console.log('전달된 pod 데이터:', pod); // 디버깅용 로그 추가
       axios.post('/api/pods/update/username', {
         namespace: this.selectedNamespace,
-        podName: pod.podname,
-        user: pod.username
+        podname: pod.podname,
+        username: pod.username
       })
       .then(response => {
         console.log(`Dashboard.vue: ${pod.username} pod 사용자 업데이트 성공`, response);
